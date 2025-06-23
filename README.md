@@ -93,6 +93,11 @@ npm run dev
 ## Frontend:
 cd client
 npm install
+
+## Update in src/environment.js file:
+change the value of IS_Prod=false
+
+## Run the frontend
 npm run dev
 
 
