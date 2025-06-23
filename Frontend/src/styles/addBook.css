@@ -1,0 +1,49 @@
+.add-book-container {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #f5f5f5;
+  border-radius: 1rem;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+}
+
+.add-book-container h5 {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.book-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.book-form input,
+.book-form textarea {
+  padding: 0.75rem;
+  border: 1px solid #dcddde;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+}
+
+.book-form button {
+  padding: 0.75rem;
+  background-color: #0077ff;
+  color: white;
+  font-size: 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.book-form button:hover {
+  background-color: #005bcc;
+}
+
+.message {
+  text-align: center;
+  margin-top: 1rem;
+  color: green;
+}
