@@ -6,7 +6,7 @@ A full stack application where users can browse books, read and write reviews, a
 
 ## 🚀 Live Demo
 
-> [Live Demo URL](https://your-deployment-link.com) *(Add once deployed)*
+https://onine-book-review-systefrontend.vercel.app/
 
 ---
 
