@@ -8,12 +8,14 @@ import { useNavigate } from "react-router-dom";
 import StarOutlineOutlinedIcon from '@mui/icons-material/StarOutlineOutlined';
 import Header from "./header.jsx";
 
+
 export default function book() {
 
     const id = useParams();
     const [book, setBook] = useState({});
     const [reviews, setReviews] = useState([]);
     const { getBookDetails, getReviews } = useContext(AuthContext);
+    const [page, setPage] = useState(false);
 
     const navigate = useNavigate();
     useEffect(() => {
@@ -33,6 +35,7 @@ export default function book() {
                 console.log(error)
             }
         }
+        setPage(true);
         getBook();
         fetchReviews();
     }, [id])
@@ -54,11 +57,14 @@ export default function book() {
     }
 
     return (
-        <div style={{padding:'1rem', backgroundColor:"rgb(221, 230, 234)"}}>
-            <Header />
-            <div className="d-flex p-3 position-relative">
-
-                <div className="d-flex flex-column position-fixed" style={{ width: "40%", }}>
+        <div>
+            <Header page={page}/>
+            <div className="d-flex p-3" style={{ height: 'calc(100vh - 70px)', overflowY: 'auto' }}>
+                <div className="d-flex flex-column" style={{
+                    width: "40%", position: "sticky",
+                    top: "20px",
+                    alignSelf: "flex-start"
+                }}>
                     <div style={{ width: '25rem', height: '20rem' }}>
                         <img src={book.coverImage} alt="" style={{ width: '100%', objectFit: 'contain', height: '100%' }} />
                     </div>
@@ -69,7 +75,7 @@ export default function book() {
                     </div>
                 </div>
 
-                <div style={{ width: "46%", left: '33rem' }} className="position-absolute">
+                <div style={{ width: "60%", paddingLeft: '2rem' }}>
                     <div>
                         <div>
                             <h2 className="fw-bold">{book.title}</h2>

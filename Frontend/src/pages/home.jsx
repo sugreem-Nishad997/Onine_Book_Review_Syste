@@ -3,26 +3,31 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext.jsx";
+import CircularProgress from '@mui/material/CircularProgress';
 import Header from "./header.jsx";
 import '../styles/home.css';
 
 export default function home() {
 
-    const { getAllBooks, userData, logout } = useContext(AuthContext);
+    const { getAllBooks } = useContext(AuthContext);
     const [books, setBooks] = useState([]);
     const [search, setSearch] = useState('');
     const [genreFilter, setGenreFilter] = useState('');
     const [categoryFilter, setCategoryFilter] = useState('');
-  
+    const [loading, setLoading] = useState(false);
+   
 
     const navigate = useNavigate();
     useEffect(() => {
         let fetchAllBooks = async () => {
+            setLoading(true);
             try {
                 const book = await getAllBooks();
                 setBooks(book);
             } catch (error) {
                 console.log(error);
+            } finally {
+                setLoading(false)
             }
         }
 
@@ -48,10 +53,13 @@ export default function home() {
 
         navigate(`/books/${id}`);
     }
+
+    
+
     return (
         <div>
             <div className="home-container">
-               <Header search={search} setSearch={setSearch} />
+                <Header search={search} setSearch={setSearch} />
                 <div className="my-2">
                     <select value={genreFilter} onChange={(e) => setGenreFilter(e.target.value)}>
                         <option value="">All Genres</option>
@@ -66,25 +74,32 @@ export default function home() {
                         ))}
                     </select>
                 </div>
+                {loading ? (
+                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
+                        <CircularProgress color="primary" />
+                    </div>
+                ) : (
 
-                <div className="books-grid">
-                    {filteredBooks.length > 0 ? (
-                        filteredBooks.map(book => (
-                            <div className="book-card" key={book._id} onClick={() => handleClick(book._id)}>
-                                <div className="image">
-                                    <img src={book.coverImage} alt={book.title} />
+                    <div className="books-grid">
+                        {filteredBooks.length > 0 ? (
+                            filteredBooks.map(book => (
+                                <div className="book-card" key={book._id} onClick={() => handleClick(book._id)}>
+                                    <div className="image">
+                                        <img src={book.coverImage} alt={book.title} />
+                                    </div>
+                                    <p className="Font">{book.title}</p>
+                                    <p style={{ fontSize: "0.9rem" }}>by <span className="fw-bold">{book.author}</span></p>
+                                    <p>₹{book.price}</p>
                                 </div>
-                                <p className="Font">{book.title}</p>
-                                <p style={{ fontSize: "0.9rem" }}>by <span className="fw-bold">{book.author}</span></p>
-                                <p>₹{book.price}</p>
-                            </div>
-                        ))
-                    ) : (
-                        <p className="no-books">No books found.</p>
-                    )}
-                </div>
+                            ))
+                        ) : (
+                            <p className="no-books">No books found.</p>
+                        )}
+                    </div>
+                )}
             </div>
 
+           
         </div>
     )
 }

@@ -3,6 +3,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import { Rating } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import Header from "./header";
 import '../styles/review.css';
 
 export default function review() {
@@ -11,6 +12,7 @@ export default function review() {
     const [rating, setRating] = useState(0);
     const [comment, setComment] = useState("");
     const [reviews, setReviews] = useState([]);
+    const [page, setPage] = useState(false);
 
     const navigate = useNavigate();
 
@@ -43,12 +45,14 @@ export default function review() {
             }
            
         }
+        setPage(true)
         fetchBook();
     },[])
 
     return (
         <div style={{backgroundColor:"rgb(230, 239, 245)", padding:'0.6rem'}}>
-            <div className="top d-flex justify-content-between p-3">
+            <Header page={page}/>
+            <div className="top d-flex justify-content-between p-3 mx-3">
                 <p className="fw-bold fs-4">Rating & Reviews</p>
                <div className="d-flex align-items-center"> 
                  <p className="mx-3">{book?book.title:""}</p>

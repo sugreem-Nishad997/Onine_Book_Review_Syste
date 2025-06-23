@@ -3,6 +3,8 @@ import { AuthContext } from '../contexts/AuthContext';
 import '../styles/addBook.css';
 import { useNavigate } from 'react-router-dom';
 import { FormGroup, FormControlLabel, Checkbox } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
+
 
 export default function AddBook() {
 
@@ -22,11 +24,13 @@ export default function AddBook() {
     "Fantasy", "Science Fiction", "Mystery", "Suspense", "Horror",
     "Biography", "Autobiography", "Science & Technology", "History",
     "Poetry", "Thriller", "Adventure", "Drama", "Travel",
-    "Self-Help", "Philosophy", "Children"
+    "Self-Help", "Philosophy", "Children", "Novel", "Fiction"
   ];
 
   const [coverImage, setCoverImage] = useState(null);
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -38,7 +42,7 @@ export default function AddBook() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
     const formData = new FormData();
     Object.entries(form).forEach(([key, value]) => {
       if (Array.isArray(value)) {
@@ -72,6 +76,8 @@ export default function AddBook() {
     } catch (error) {
       console.log(error)
       setMessage("Failed to add book: " + (error.response?.data?.message || error.message));
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -88,10 +94,16 @@ export default function AddBook() {
       }));
     }
   };
- 
+
   return (
     <div className="add-book-container">
       <h5>Add New Book</h5>
+      {loading && (
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
+          <CircularProgress color="primary" />
+        </div>
+      )}
+
       <form className="book-form" onSubmit={handleSubmit}>
         <div className='d-flex'>
           <input

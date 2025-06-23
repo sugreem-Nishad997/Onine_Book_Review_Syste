@@ -6,12 +6,14 @@ import PowerSettingsNewSharpIcon from '@mui/icons-material/PowerSettingsNewSharp
 import { useParams } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import Header from './header';
 import '../styles/profileInfo.css';
 
 
 export default function userProfile() {
     const [nameEdit, setNameEdit] = useState(true);
     const [emailEdit, setEmailEdit] = useState(true);
+    const [page, setPage] = useState(false);
 
     const navigate = useNavigate();
     const [formState, setFormState] = useState({
@@ -53,101 +55,115 @@ export default function userProfile() {
                 setFormState({ name, email });
             }
         }
+        setPage(true)
         getUser();
     }, [id])
 
     return (
-        <div className='d-flex'>
-            <div style={{ backgroundColor: 'rgb(234, 240, 245)', padding: '0.9rem 0.9rem 0.9rem 2rem', width: '30%' }}>
-                <div className="clientContainer">
-                    <div className='profile'>
-                        <div style={{ margin: '0.9rem' }}>
-                            <img src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/profile-pic-male_4811a1.svg" alt="" />
-                        </div>
-                        <div style={{ display: 'flex', flexDirection: 'column' }}>
-                            <p style={{ fontSize: '0.7rem', marginBottom: '0rem' }}>Hello,</p>
-                            <h6>{userData?userData.name:""}</h6>
-                        </div>
-                    </div>
-                    <div className='profileManagement'>
-                        <div onClick={() => navigate("/")}>
-                            <div className='icon-div order'>
-                                <FilterFramesSharpIcon sx={{ color: 'rgb(5, 101, 190)' }} />
-                                <h6 className='icon-tag'>HOME</h6>
+        <div>
+            <Header page={page} />
+            <div className='d-flex'>
+                <div style={{ backgroundColor: 'rgb(234, 240, 245)', padding: '0.9rem 0.9rem 0.9rem 2rem', width: '30%' }}>
+                    <div className="clientContainer">
+                        <div className='profile'>
+                            <div style={{ margin: '0.9rem' }}>
+                                <img src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/profile-pic-male_4811a1.svg" alt="" />
+                            </div>
+                            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                <p style={{ fontSize: '0.7rem', marginBottom: '0rem' }}>Hello,</p>
+                                <h6>{userData ? userData.name : ""}</h6>
                             </div>
                         </div>
-                        <div>
-                            <div className='icon-div'>
-                                <PersonIcon sx={{ color: 'rgb(5, 101, 190)' }} />
-                                <h6 className='icon-tag'>ACCOUNT SETTINGS</h6>
+                        <div className='profileManagement'>
+                            <div onClick={() => navigate("/")}>
+                                <div className='icon-div order'>
+                                    <FilterFramesSharpIcon sx={{ color: 'rgb(5, 101, 190)' }} />
+                                    <h6 className='icon-tag'>HOME</h6>
+                                </div>
                             </div>
-                            <div className='accountSettings'>
-                                <p>Profile Information</p>
+                            <div>
+                                <div className='icon-div'>
+                                    <PersonIcon sx={{ color: 'rgb(5, 101, 190)' }} />
+                                    <h6 className='icon-tag'>ACCOUNT SETTINGS</h6>
+                                </div>
+                                <div className='accountSettings'>
+                                    <p>Profile Information</p>
+                                </div>
                             </div>
-                        </div>
 
-                        <div>
-                            <div className='icon-div'>
-                                <PowerSettingsNewSharpIcon sx={{ color: 'rgb(5, 101, 190)' }} />
-                                <h6 className='icon-tag logout' onClick={() => {
-                                    localStorage.removeItem("token")
-                                    navigate('/');
-                                }}>LOGOUT</h6>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div style={{ backgroundColor: 'rgb(234, 240, 245)', padding: '0.9rem', width: '70%' }}>
-                <div style={{ backgroundColor: 'white' }} className="p-5">
-                    <div className="mb-3 d-flex">
-                        <h6>Personal Information</h6>
-                        <span className="ms-5 edit" onClick={() => setNameEdit(!nameEdit)}>{nameEdit ? 'Edit' : 'Cancel'}</span>
-                    </div>
-                    <div>
-                        <TextField id={nameEdit ? "outlined-basic" : "outlined-disabled"} variant="outlined" label={nameEdit ? "" : "First Name"} name='name' value={formState.name} disabled={nameEdit} size="small" onChange={handleChange} />
-
-                        {!nameEdit && <Button variant="contained" className="ms-3" onClick={handleUpdate}>save</Button>}
-                    </div>
-                    <div className="mb-3 d-flex mt-5">
-                        <h6>Email Address</h6>
-                        <span className="ms-5 edit" onClick={() => setEmailEdit(!emailEdit)}>{emailEdit ? 'Edit' : 'Cancel'}</span>
-                    </div>
-                    <div>
-                        <TextField id={emailEdit ? "outlined-basic" : "outlined-disabled"} variant="outlined" label={emailEdit ? "" : "Email"} name='email' value={formState.email} disabled={emailEdit} size="small" onChange={handleChange} />
-                        {emailEdit ? "" : <Button variant="contained" className="ms-3" onClick={handleUpdate} >save</Button>}
-                    </div>
-
-                    <div className="mt-5">
-                        <button type="button" className="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Delete Account</button>
-
-
-                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Enter the following text to delte account <span className="text-danger">"DELETEMYACCOUNT"</span></h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form>
-
-                                            <div class="mb-3">
-
-                                                <textarea class="form-control" id="message-text"></textarea>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-danger ">Delete</button>
-                                    </div>
+                            <div>
+                                <div className='icon-div'>
+                                    <PowerSettingsNewSharpIcon sx={{ color: 'rgb(5, 101, 190)' }} />
+                                    <h6 className='icon-tag logout' onClick={() => {
+                                        localStorage.removeItem("token")
+                                        navigate('/');
+                                    }}>LOGOUT</h6>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div style={{ backgroundColor: 'rgb(234, 240, 245)', padding: '0.9rem', width: '70%' }}>
+                    <div style={{ backgroundColor: 'white' }} className="p-5">
+                        <div className="mb-3 d-flex">
+                            <h6>Personal Information</h6>
+                            <span className="ms-5 edit" onClick={() => setNameEdit(!nameEdit)}>{nameEdit ? 'Edit' : 'Cancel'}</span>
+                        </div>
+                        <div>
+                            <TextField id={nameEdit ? "outlined-basic" : "outlined-disabled"} variant="outlined" label={nameEdit ? "" : "First Name"} name='name' value={formState.name} disabled={nameEdit} size="small" onChange={handleChange} />
 
+                            {!nameEdit && <Button variant="contained" className="ms-3" onClick={handleUpdate}>save</Button>}
+                        </div>
+                        <div className="mb-3 d-flex mt-5">
+                            <h6>Email Address</h6>
+                            <span className="ms-5 edit" onClick={() => setEmailEdit(!emailEdit)}>{emailEdit ? 'Edit' : 'Cancel'}</span>
+                        </div>
+                        <div>
+                            <TextField id={emailEdit ? "outlined-basic" : "outlined-disabled"} variant="outlined" label={emailEdit ? "" : "Email"} name='email' value={formState.email} disabled={emailEdit} size="small" onChange={handleChange} />
+                            {emailEdit ? "" : <Button variant="contained" className="ms-3" onClick={handleUpdate} >save</Button>}
+                        </div>
+
+                        <div className="mb-3 mt-5">
+                            <h6 className="mb-3">FAQs</h6>
+                            <p style={{ fontSize: '0.8rem', fontWeight: 'bold' }}>What happens when I update my email address ?</p>
+                            <p style={{ fontSize: '0.75rem' }}>Your login email id  changes, likewise. You'll receive all your account related communication on your updated email address .</p>
+                            <p style={{ fontSize: '0.8rem', fontWeight: 'bold' }}>What happens to my existing account when I update my email address ?</p>
+                            <p style={{ fontSize: '0.75rem' }}>Updating your email address doesn't invalidate your account. Your account remains fully functional. You'll continue seeing your  saved information and personal details.</p>
+                            <p style={{ fontSize: '0.8rem', fontWeight: 'bold' }}>When will my  account be updated with the new email address ?</p>
+                            <p style={{ fontSize: '0.75rem' }}>It happens as soon as you confirm the verification code sent to your email and save the changes</p>
+                        </div>
+
+                        <div className="mt-5">
+                            <button type="button" className="btn btn-outline-danger d-none" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Delete Account</button>
+
+
+                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Enter the following text to delte account <span className="text-danger">"DELETEMYACCOUNT"</span></h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form>
+
+                                                <div class="mb-3">
+
+                                                    <textarea class="form-control" id="message-text"></textarea>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-danger ">Delete</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
     )
