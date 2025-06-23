@@ -20,8 +20,10 @@ function App() {
             <Route path='/' element={<Home />} />
             <Route path='/auth' element={<Authentication />} />
             <Route path='/books/:id' element={<Book />} />
-            <Route path='/users/:id' element={<UserProfile />} />
-            <Route path='/reviews/:id' element={<Review />} />
+            <Route path='/users/:id' element={
+            <RequireAuth><UserProfile /></RequireAuth>} />
+            <Route path='/reviews/:id' element={
+           <RequireAuth> <Review /></RequireAuth>} />
 
             <Route
               path="/add-book"
