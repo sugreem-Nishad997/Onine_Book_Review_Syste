@@ -33,19 +33,36 @@ select {
   background: #f9f9f9;
   border-radius: 12px;
   padding: 16px;
-  text-align: center;
   transition: box-shadow 0.2s ease;
+  height: 20rem;
+  text-align: center;
 }
 
-.book-card img {
+.book-card  img {
   max-width: 100%;
   height: 180px;
   object-fit: cover;
   border-radius: 8px;
+  
 }
+
+.book-card .image {
+  border-radius: 10px;
+}
+
+.book-card .image img {
+  transition: transform 0.3s ease-in-out;
+}
+
+.book-card .image:hover img {
+  transform: scale(1.1);
+}
+
+
 
 .book-card:hover {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
 }
 
 .no-books {
@@ -68,6 +85,10 @@ select {
     z-index: 100;
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
+
+}
+.dropDownList li{
+  margin-top: 0.7rem;
 }
 .login{
     display: flex;
@@ -113,3 +134,15 @@ select {
   background-color: rgb(44, 89, 212);
   color: white;
 }
+
+.Font{
+    font-size: 0.88rem;
+    font-weight: bolder;
+    text-align: center;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 0.5rem;
+}
+

@@ -1,17 +1,20 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { Rating } from "@mui/material";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import '../styles/review.css';
 
 export default function review() {
 
-    const [book, setBook] = useState([]);
+    const [book, setBook] = useState(null);
     const [rating, setRating] = useState(0);
     const [comment, setComment] = useState("");
     const [reviews, setReviews] = useState([]);
 
-    const { addReview } = useContext(AuthContext);
+    const navigate = useNavigate();
+
+    const { addReview, getBookDetails} = useContext(AuthContext);
     const id = useParams();
 
     const handleSubmit = async () => {
@@ -20,36 +23,53 @@ export default function review() {
             return;
         }
 
-        const newReview = { book, rating, comment };
-        let response = await addReview(newReview, id);
-        console.log(response);
+        const newReview = {rating, comment };
+        
+        await addReview(newReview, id);
+       
         setReviews([newReview, ...reviews]);
 
         // Clear form
         setRating(0);
         setComment("");
+        navigate(`/books/${book._id}`)
     };
+
+    useEffect(()=>{
+        const fetchBook = async() => {
+            let response = await getBookDetails(id);
+            if(response.success){
+                setBook(response.book)
+            }
+           
+        }
+        fetchBook();
+    },[])
 
     return (
         <div style={{backgroundColor:"rgb(230, 239, 245)", padding:'0.6rem'}}>
             <div className="top d-flex justify-content-between p-3">
                 <p className="fw-bold fs-4">Rating & Reviews</p>
-                <p>Book</p>
+               <div className="d-flex align-items-center"> 
+                 <p className="mx-3">{book?book.title:""}</p>
+                 <div style={{height:"5rem", width:"5rem"}}>
+                    <img src={book?book.coverImage:""} alt="" style={{width:'100%', height:"100%", objectFit:"contain"}}/>
+                 </div>
+               </div>
             </div>
             <div className="review-container">
                 <div className="left-panel" style={{width:'35%'}}>
                     <h6>What makes a good review</h6>
-                    <h6>Have you used this product?</h6>
-                    <p>Your review should be about your experience with the product.</p>
+                    <h6>Have you read this book?</h6>
+                    <p>Your review should be about your experience with the Book.</p>
 
-                    <h6>Why review a product?</h6>
-                    <p>Your valuable feedback will help fellow shoppers decide!</p>
+                    <h6>Why review a Book?</h6>
+                    <p>Your valuable feedback will help fellow Authors decide!</p>
 
-                    <h6>How to review a product?</h6>
+                    <h6>How to review a Book?</h6>
                     <p>
                         Your review should include facts. An honest opinion is always appreciated.
-                        If you have an issue with the product or service please contact us from the
-                        <a href="#"> help centre</a>.
+            
                     </p>
                 </div>
 

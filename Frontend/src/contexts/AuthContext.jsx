@@ -16,6 +16,7 @@ export const AuthProvider = ({ children }) => {
 
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [bookDetails, setBookDetails] = useState(null);
 
     const handleRagister = async (name, email, password) => {
         try {
@@ -114,6 +115,7 @@ export const AuthProvider = ({ children }) => {
             console.log(bookId.id)
             let id = bookId.id;
             const request = await client.get(`/books/${id}`);
+            setBookDetails(request.data.book);
             return request.data
         } catch (error) {
             throw error;
@@ -191,7 +193,7 @@ export const AuthProvider = ({ children }) => {
         fetchUserData();
     }, []);
 
-    const data = { getAllBooks, getBookDetails, getReviews, handleLogIn, handleRagister, getProfile, userData, setUserData, updateProfile, addReview, logout, addBook, loading};
+    const data = { getAllBooks, getBookDetails, getReviews, handleLogIn, handleRagister, getProfile, userData, setUserData, updateProfile, addReview, logout, addBook, loading, bookDetails};
 
     return (
         <AuthContext.Provider value={data}>

@@ -7,6 +7,7 @@ import ArrowDown from '@mui/icons-material/KeyboardArrowDownSharp';
 import ArrowUp from '@mui/icons-material/KeyboardArrowUpSharp';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import AddBox from '@mui/icons-material/AddBoxSharp';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { Button } from '@mui/material';
 
 import '../styles/home.css';
@@ -37,12 +38,15 @@ export default function home() {
     const filteredBooks = books.filter(book => {
         const matchesSearch = book.title.toLowerCase().includes(search.toLowerCase()) ||
             book.author.toLowerCase().includes(search.toLowerCase());
-        const matchesGenre = genreFilter ? book.genre === genreFilter : true;
+        const matchesGenre = genreFilter ? book.genre?.includes(genreFilter) : true;
         const matchesCategory = categoryFilter ? book.category === categoryFilter : true;
         return matchesSearch && matchesGenre && matchesCategory;
     });
 
-    const uniqueGenres = [...new Set(books.map(book => book.genre))];
+    const genreSet = new Set();
+    books.forEach(book => book.genre?.forEach(g => genreSet.add(g)));
+    const uniqueGenres = Array.from(genreSet);
+
     const uniqueCategories = [...new Set(books.map(book => book.category))];
 
     const handleClick = (id) => {
@@ -65,7 +69,7 @@ export default function home() {
     }
 
 
-    const token = localStorage.getItem("token");
+
 
     return (
         <div>
@@ -92,15 +96,18 @@ export default function home() {
                         </div>
                         <ul className="dropDownList" style={{ display: dropDown === false ? 'none' : '' }}
                             onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-                            <li className='list-1' style={{ fontSize: '0.93rem' }}>
+                            <li className='list-1' style={{ fontSize: '0.93rem', display: userData ? 'none' : '' }}>
                                 <span >New Customer?</span>
                                 <span onClick={() => navigate("/auth")} className="singup">SignUp</span>
                             </li>
                             <li>
-                                <Button sx={{ color: 'black' }} startIcon={<AccountCircle />} onClick={() => { userData ? navigate(`/users/${userData._id}`) : navigate("/auth") }}>My Profile</Button>
+                                <Button fullWidth sx={{ color: 'black', ':hover': { color: 'white' }, justifyContent: 'flex-start' }} startIcon={<AccountCircle />} onClick={() => { userData ? navigate(`/users/${userData._id}`) : navigate("/auth") }}>My Profile</Button>
                             </li>
                             <li>
-                                <Button sx={{color:"black"}} startIcon={<AddBox/>} onClick={() => navigate("/add-book")}>Add Book</Button>
+                                <Button fullWidth sx={{ color: "black", ':hover': { color: 'white' }, justifyContent: 'flex-start' }} startIcon={<AddBox />} onClick={() => navigate("/add-book")}>Add Book</Button>
+                            </li>
+                            <li style={{display: userData ? '' : 'none' }}>
+                                <Button fullWidth sx={{ color: "black", ':hover': { color: 'white' }, justifyContent: 'flex-start' }} startIcon={<LogoutIcon />} onClick={() => handleLogout()}>Logout</Button>
                             </li>
                         </ul>
                     </div>
@@ -124,12 +131,13 @@ export default function home() {
                 <div className="books-grid">
                     {filteredBooks.length > 0 ? (
                         filteredBooks.map(book => (
-                            <div className="book-card" key={book._id}>
-                                <img src={book.coverImage} alt={book.title} />
-                                <h4>{book.title}</h4>
-                                <p>by {book.author}</p>
+                            <div className="book-card" key={book._id} onClick={() => handleClick(book._id)}>
+                                <div className="image">
+                                    <img src={book.coverImage} alt={book.title} />
+                                </div>
+                                <p className="Font">{book.title}</p>
+                                <p style={{ fontSize: "0.9rem" }}>by <span className="fw-bold">{book.author}</span></p>
                                 <p>₹{book.price}</p>
-                                <small>{book.genre} | {book.category}</small>
                             </div>
                         ))
                     ) : (
@@ -137,7 +145,7 @@ export default function home() {
                     )}
                 </div>
             </div>
-            
+
         </div>
     )
 }

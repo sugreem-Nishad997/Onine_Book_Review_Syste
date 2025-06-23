@@ -5,7 +5,7 @@ const bookSchema = new Schema({
     author : {type : String, required : true},
     publishAt : Date,
     description : { type : String},
-    genre : { type : String},
+    genre : [{ type : String}],
     category : { type : String, required : true},
     price : { type : Number, required : true},
     coverImage : {type : String, required: true}

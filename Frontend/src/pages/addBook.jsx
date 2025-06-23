@@ -2,8 +2,9 @@ import { useState, useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import '../styles/addBook.css';
 import { useNavigate } from 'react-router-dom';
+import { FormGroup, FormControlLabel, Checkbox } from '@mui/material';
 
-export default function AddBook() { 
+export default function AddBook() {
 
   const { addBook } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -11,11 +12,18 @@ export default function AddBook() {
     title: "",
     author: "",
     description: "",
-    genre: "",
+    genre: [],
     price: "",
     category: "",
     publishAt: ""
   });
+
+  const availableGenres = [
+    "Fantasy", "Science Fiction", "Mystery", "Suspense", "Horror",
+    "Biography", "Autobiography", "Science & Technology", "History",
+    "Poetry", "Thriller", "Adventure", "Drama", "Travel",
+    "Self-Help", "Philosophy", "Children"
+  ];
 
   const [coverImage, setCoverImage] = useState(null);
   const [message, setMessage] = useState("");
@@ -33,23 +41,28 @@ export default function AddBook() {
 
     const formData = new FormData();
     Object.entries(form).forEach(([key, value]) => {
-      formData.append(key, value);
+      if (Array.isArray(value)) {
+        value.forEach(item => formData.append(`${key}[]`, item));
+      } else {
+        formData.append(key, value);
+      }
     });
-    
+
+
     if (coverImage) {
-        console.log(coverImage)
+      console.log(coverImage)
       formData.append("coverImage", coverImage);
     }
 
 
     try {
       const res = await addBook(formData);
-      setMessage(res); 
+      setMessage(res);
       setForm({
         title: "",
         author: "",
         description: "",
-        genre: "",
+        genre: [],
         price: "",
         category: "",
         publishAt: Date
@@ -57,12 +70,25 @@ export default function AddBook() {
       setCoverImage(null);
       navigate("/");
     } catch (error) {
-        console.log(error)
+      console.log(error)
       setMessage("Failed to add book: " + (error.response?.data?.message || error.message));
     }
   };
-  
 
+  const handleGenreCheckboxChange = (genre) => {
+    if (form.genre.includes(genre)) {
+      setForm(prev => ({
+        ...prev,
+        genre: prev.genre.filter(g => g !== genre)
+      }));
+    } else {
+      setForm(prev => ({
+        ...prev,
+        genre: [...prev.genre, genre]
+      }));
+    }
+  };
+ 
   return (
     <div className="add-book-container">
       <h5>Add New Book</h5>
@@ -97,13 +123,29 @@ export default function AddBook() {
             required
           />
           <input
-            className='ms-4'
             type="text"
-            name="genre"
-            placeholder="Genre"
-            value={form.genre}
-            onChange={handleChange}
+            value={form.genre ? form.genre.join(", ") : ""}
+            readOnly
+            placeholder="Selected Genres"
+            className="ms-2"
           />
+          <div className='ms-2'>
+            <FormGroup style={{ overflowY: 'hidden', width: '200px', maxHeight: '50px', marginTop: '1rem' }}>
+              {availableGenres.map((genre, index) => (
+                <FormControlLabel
+                  key={index}
+                  control={
+                    <Checkbox
+                      checked={form.genre.includes(genre)}
+                      onChange={() => handleGenreCheckboxChange(genre)}
+                    />
+                  }
+                  label={genre}
+                />
+              ))}
+            </FormGroup>
+          </div>
+
         </div>
 
         <div className='d-flex'>
@@ -133,7 +175,7 @@ export default function AddBook() {
           rows={4}
         />
 
-        <input type="file" accept="image/*" onChange={handleFileChange} name='coverImage'/>
+        <input type="file" accept="image/*" onChange={handleFileChange} name='coverImage' />
 
         <button type="submit">Add Book</button>
 

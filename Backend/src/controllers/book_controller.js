@@ -23,7 +23,7 @@ const getBookById = async (req, res) => {
 }
 
 const createBook = async (req, res) => {
-    console.log(req.body);
+    console.log(req.body.genre);
         console.log("FILE:", req.file);
     try {
         console.log("inside the createBook")

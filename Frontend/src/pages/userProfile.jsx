@@ -66,7 +66,7 @@ export default function userProfile() {
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
                             <p style={{ fontSize: '0.7rem', marginBottom: '0rem' }}>Hello,</p>
-                            <h6>Sugreem Nishad</h6>
+                            <h6>{userData?userData.name:""}</h6>
                         </div>
                     </div>
                     <div className='profileManagement'>
@@ -140,7 +140,7 @@ export default function userProfile() {
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-danger">Delete</button>
+                                        <button type="button" class="btn btn-danger ">Delete</button>
                                     </div>
                                 </div>
                             </div>
