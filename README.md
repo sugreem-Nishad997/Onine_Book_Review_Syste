@@ -75,22 +75,22 @@ A full stack application where users can browse books, read and write reviews, a
 
 Prerequisites
 
-Node.js (v16+)
+. Node.js (v16+)
 
-MongoDB (local or Atlas)
+. MongoDB (local or Atlas)
 
-Backend
+## Backend
 cd server
 npm install
 
-Create a .env file:
+## Create a .env file:
 MONGO_URI=your_mongodb_uri
 JWT_SECRET=your_jwt_secret
 
-Run the backend:
+## Run the backend:
 npm run dev
 
-Frontend
+## Frontend:
 cd client
 npm install
 npm run dev
