@@ -1,22 +1,15 @@
-
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { AuthContext } from '../contexts/AuthContext';
 import { Snackbar } from '@mui/material';
-import { IconButton } from "@mui/material";
-import HomeIcon from '@mui/icons-material/Home';
+import CircularProgress from '@mui/material/CircularProgress';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -31,6 +24,7 @@ export default function authentication() {
     const [name, setName] = React.useState("");
     const [error, setError] = React.useState("");
     const [message, setMessage] = React.useState("");
+    const [loading, setLoading] = React.useState(false);
 
     const [formState, setFormState] = React.useState(false);
     const [open, setOpen] = React.useState(false);
@@ -41,6 +35,7 @@ export default function authentication() {
 
     let handleAuth = async () => {
         try {
+            setLoading(true)
             if (!formState) {
                 let result = await handleLogIn(email, password);
                 if (result.success) {
@@ -50,10 +45,10 @@ export default function authentication() {
                 } else {
                     setError(result.message || "Login failed");
                 }
-            }else {
-            if (!name || !email || !password) {
-                setError("All fields are required");
             } else {
+                if (!name || !email || !password) {
+                    setError("All fields are required");
+                } else {
                     let result = await handleRagister(name, email, password);
                     console.log(result);
                     setMessage(result);
@@ -67,7 +62,8 @@ export default function authentication() {
             }
         } catch (err) {
             setError(err?.response?.data?.message || err.message || "An error occurred");
-
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -78,7 +74,12 @@ export default function authentication() {
 
     return (
         <ThemeProvider theme={defaultTheme}>
-            <Grid container component="main" sx={{ height: '100%', justifyContent: 'center', }}>
+            {loading && (
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
+                    <CircularProgress color="primary" />
+                </div>
+            )}
+            <Grid container component="main" sx={{ height: '100%', justifyContent: 'center', marginTop:'2rem'}}>
                 <Grid component={Paper} elevation={6} >
                     <Box
                         sx={{
@@ -117,6 +118,7 @@ export default function authentication() {
                                 id="email"
                                 label="email"
                                 name="email"
+                                autoComplete='false'
                                 value={email}
                                 autoFocus
                                 onChange={(e) => setEmail(e.target.value)}
@@ -149,7 +151,7 @@ export default function authentication() {
             <Snackbar
                 open={open}
                 autoHideDuration={4000}
-                onClose={()=>setOpen(false)}
+                onClose={() => setOpen(false)}
                 message={message}
             />
         </ThemeProvider>
