@@ -27,6 +27,7 @@ A full stack application where users can browse books, read and write reviews, a
 * MongoDB with Mongoose 
 * JWT for Authentication
 * Bcrypt for Password Hashing
+* Cloudinary for Image Upload
 
 ---
 
@@ -80,21 +81,46 @@ Prerequisites
 . MongoDB (local or Atlas)
 
 ## Backend
-cd server
-npm install
+ cd backend
+ npm install
 
 ## Create a .env file:
-MONGO_URI=your_mongodb_uri
-JWT_SECRET=your_jwt_secret
+MONGO_URL=your_mongodb_uri
+SECRET_KEY=your_jwt_secret
+CLOUD_NAME=your_cloudinary_cloud_name
+API_KEY=your_cloudinary_api_key
+API_SECRET=your_cloudinary_api_secret
 
 ## Run the backend:
 npm run dev
 
 ## Frontend:
-cd client
-npm install
+ cd frontend
+ npm install
+
+## Update in src/environment.js file:
+change the value of IS_Prod=false
+
+## Run the frontend
 npm run dev
 
+📂 Cloudinary Configuration
+
+This project uses Cloudinary for handling image uploads (e.g., book cover images). To enable Cloudinary:
+
+1. Sign up at https://cloudinary.com.
+
+2. Go to your Dashboard and note the following:
+
+   . CLOUD_NAME
+
+   . API_KEY
+
+   . API_SECRET
+
+3. Add them to your .env file as shown above.
+
+4. Use a Cloudinary upload utility in your backend to send images directly to the cloud.
 
 ## Future Improvements
 
