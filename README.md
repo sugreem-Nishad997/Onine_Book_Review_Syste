@@ -81,8 +81,8 @@ Prerequisites
 . MongoDB (local or Atlas)
 
 ## Backend
- . cd server
- . npm install
+ cd backend
+ npm install
 
 ## Create a .env file:
 MONGO_URL=your_mongodb_uri
@@ -95,8 +95,8 @@ API_SECRET=your_cloudinary_api_secret
 npm run dev
 
 ## Frontend:
- . cd client
- . npm install
+ cd frontend
+ npm install
 
 ## Update in src/environment.js file:
 change the value of IS_Prod=false
