@@ -1,10 +1,11 @@
 import { useContext } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext.jsx";
-import CircularProgress from '@mui/material/CircularProgress';
+import Spinner from "../Loader/Spinner.jsx";
 import Header from "./header.jsx";
+import { Snackbar, Alert } from "@mui/material";
 import '../styles/home.css';
 
 export default function home() {
@@ -15,8 +16,11 @@ export default function home() {
     const [genreFilter, setGenreFilter] = useState('');
     const [categoryFilter, setCategoryFilter] = useState('');
     const [loading, setLoading] = useState(false);
-   
+    const [open, setOpen] = useState(false);
+    const [snackMessage, setSnackMessage] = useState('');
+    const location = useLocation();
 
+    const message = location.state?.message;
     const navigate = useNavigate();
     useEffect(() => {
         let fetchAllBooks = async () => {
@@ -30,9 +34,20 @@ export default function home() {
                 setLoading(false)
             }
         }
-
+        if (message) {
+            setOpen(true);
+            setSnackMessage(message)
+        }
         fetchAllBooks();
     }, [])
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
+    };
 
     const filteredBooks = books.filter(book => {
         const matchesSearch = book.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -54,7 +69,7 @@ export default function home() {
         navigate(`/books/${id}`);
     }
 
-    
+
 
     return (
         <div>
@@ -75,9 +90,7 @@ export default function home() {
                     </select>
                 </div>
                 {loading ? (
-                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
-                        <CircularProgress color="primary" />
-                    </div>
+                    <Spinner />
                 ) : (
 
                     <div className="books-grid">
@@ -98,8 +111,17 @@ export default function home() {
                     </div>
                 )}
             </div>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose} anchorOrigin={{vertical:'top', horizontal:'center'}}>
+                <Alert
+                    onClose={handleClose}
+                    severity="success"
+                    variant="filled"
+                    sx={{ width: '100%' }}
+                >
+                    {snackMessage}
+                </Alert>
+            </Snackbar>
 
-           
         </div>
     )
 }

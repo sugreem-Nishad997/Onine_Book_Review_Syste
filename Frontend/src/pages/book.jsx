@@ -7,6 +7,7 @@ import { Button, Rating } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import StarOutlineOutlinedIcon from '@mui/icons-material/StarOutlineOutlined';
 import Header from "./header.jsx";
+import Spinner from "../Loader/Spinner.jsx";
 
 
 export default function book() {
@@ -16,15 +17,19 @@ export default function book() {
     const [reviews, setReviews] = useState([]);
     const { getBookDetails, getReviews } = useContext(AuthContext);
     const [page, setPage] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
     useEffect(() => {
+        setLoading(true);
         const getBook = async () => {
             try {
                 let result = await getBookDetails(id);
                 setBook(result.book);
             } catch (error) {
                 console.log(error)
+            }finally{
+                setLoading(false)
             }
         }
         const fetchReviews = async () => {
@@ -33,6 +38,8 @@ export default function book() {
                 setReviews(result)
             } catch (error) {
                 console.log(error)
+            }finally{
+                setLoading(false)
             }
         }
         setPage(true);
@@ -58,7 +65,7 @@ export default function book() {
 
     return (
         <div>
-            <Header page={page}/>
+            <Header page={page} />
             <div className="d-flex p-3" style={{ height: 'calc(100vh - 70px)', overflowY: 'auto' }}>
                 <div className="d-flex flex-column" style={{
                     width: "40%", position: "sticky",
@@ -66,6 +73,9 @@ export default function book() {
                     alignSelf: "flex-start"
                 }}>
                     <div style={{ width: '25rem', height: '20rem' }}>
+                        {loading && (
+                            <Spinner />
+                        )}
                         <img src={book.coverImage} alt="" style={{ width: '100%', objectFit: 'contain', height: '100%' }} />
                     </div>
                     <div className="mt-2 p-3">

@@ -1,9 +1,9 @@
-import "../styles/Spinner.css"; 
-
+import { CircularProgress } from "@mui/material";
+import '../styles/spinner.css';
 export default function Spinner() {
   return (
-    <div className="spinner-container">
-      <div className="spinner" />
+    <div className="spinner">
+      <CircularProgress color="primary"/>
     </div>
   );
 }

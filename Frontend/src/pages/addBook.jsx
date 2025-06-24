@@ -3,7 +3,7 @@ import { AuthContext } from '../contexts/AuthContext';
 import '../styles/addBook.css';
 import { useNavigate } from 'react-router-dom';
 import { FormGroup, FormControlLabel, Checkbox } from '@mui/material';
-import CircularProgress from '@mui/material/CircularProgress';
+import Spinner from '../Loader/Spinner';
 
 
 export default function AddBook() {
@@ -72,7 +72,7 @@ export default function AddBook() {
         publishAt: Date
       });
       setCoverImage(null);
-      navigate("/");
+      navigate("/",{state:{message:"Book Added Successfully"}});
     } catch (error) {
       console.log(error)
       setMessage("Failed to add book: " + (error.response?.data?.message || error.message));
@@ -99,12 +99,10 @@ export default function AddBook() {
     <div className="add-book-container">
       <h5>Add New Book</h5>
       {loading && (
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
-          <CircularProgress color="primary" />
-        </div>
+        <Spinner/>
       )}
 
-      <form className="book-form" onSubmit={handleSubmit}>
+      <form className="book-form" onSubmit={handleSubmit} style={{opacity:loading?'0.5':'1'}}>
         <div className='d-flex'>
           <input
             type="text"

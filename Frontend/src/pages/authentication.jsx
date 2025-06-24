@@ -9,11 +9,10 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { AuthContext } from '../contexts/AuthContext';
 import { Snackbar } from '@mui/material';
-import CircularProgress from '@mui/material/CircularProgress';
+import Spinner from '../Loader/Spinner';
 import { useNavigate } from 'react-router-dom';
 
 
-// TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
 
@@ -39,9 +38,9 @@ export default function authentication() {
             if (!formState) {
                 let result = await handleLogIn(email, password);
                 if (result.success) {
-                    setMessage(result.message);
+                    setMessage(`Welcomeback mr. ${result.user.name}`);
                     setError("");
-                    navigate("/");
+                    navigate("/",{state:{message:`Welcomeback mr. ${result.user.name}`}});
                 } else {
                     setError(result.message || "Login failed");
                 }
@@ -75,12 +74,10 @@ export default function authentication() {
     return (
         <ThemeProvider theme={defaultTheme}>
             {loading && (
-                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
-                    <CircularProgress color="primary" />
-                </div>
+                <Spinner/>
             )}
             <Grid container component="main" sx={{ height: '100%', justifyContent: 'center', marginTop:'2rem'}}>
-                <Grid component={Paper} elevation={6} >
+                <Grid component={Paper} elevation={6} sx={{opacity:loading?'0.5':'1'}}>
                     <Box
                         sx={{
                             my: 8,
